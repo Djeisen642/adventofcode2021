@@ -6,5 +6,5 @@
   * Part 2: written in JavaScript
 * Day 4:
   * Part 1: tried it in R, ended up using Dart
-  * Part 2: in Dart
+  * Part 2: written in Dart
 * Day 5: written in C#
