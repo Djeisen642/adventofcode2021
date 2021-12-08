@@ -21,8 +21,8 @@ void main() async {
     const int numItemsInRow = 5;
     List<List<int>> columns = [];
     List<List<int>> rows = List.empty(growable: true);
-    List<List<int>>? currentMinGroup;
-    int currentMinIndex = 0;
+    List<List<int>>? currentMaxGroup;
+    int currentMaxIndex = 0;
     await for (String line in lines) {
       if (firstLine) {
         firstLine = false;
@@ -40,12 +40,16 @@ void main() async {
         rows.add(numsInRow);
         if (rows.length == numItemsInRow) {
           List<List<int>> groupToCheck = rows + columns;
+          int firstWinnerValue = 0;
           for (var setToCheck in groupToCheck) {
             int value = checkEntries(setToCheck, numbersToCheck);
-            if (currentMinIndex == 0 || value < currentMinIndex) {
-              currentMinIndex = value;
-              currentMinGroup = groupToCheck;
+            if (firstWinnerValue == 0 || value < firstWinnerValue) {
+              firstWinnerValue = value;
             }
+          }
+          if (currentMaxIndex == 0 || firstWinnerValue > currentMaxIndex) {
+            currentMaxIndex = firstWinnerValue;
+            currentMaxGroup = groupToCheck;
           }
           columns = [];
           rows = List.empty(growable: true);
@@ -53,10 +57,12 @@ void main() async {
       }
     }
     List<int> numsUsed = numbersToCheck.sublist(
-        0, currentMinIndex + 1); // one more than the index
-    if (currentMinGroup == null) throw Exception('No min group');
+        0,
+        min(numbersToCheck.length,
+            currentMaxIndex + 1)); // one more than the index
+    if (currentMaxGroup == null) throw Exception('No max group');
     List<List<int>> rowsOfGroupToCheck =
-        currentMinGroup.sublist(0, numItemsInRow);
+        currentMaxGroup.sublist(0, numItemsInRow);
     int sum = 0;
     for (var row in rowsOfGroupToCheck) {
       for (var el in row) {
